@@ -3,6 +3,8 @@
 import os
 from random import shuffle
 import sys
+import unidecode
+
 
 SET_SIZE = 7
 
@@ -26,6 +28,20 @@ def load_distribution_file(file_name):
             return_letter_set.append((line[0], int(line[1]), int(line[2])))
 
     return return_letter_set
+
+def load_dictionary_file(file_name):
+    return_word_list = []
+    if not os.path.isfile(file_name):
+        print("File {} not found".format(file_name), file=sys.stderr)
+    else:
+        with open(file_name, "r", encoding="iso-8859-1") as dictionary_file:
+            word_list = dictionary_file.read().split("\n")
+
+        for word in word_list:
+            if word:
+                return_word_list.append(word)
+
+    return return_word_list
 
 def generate_random_input(letter_set):
     '''
