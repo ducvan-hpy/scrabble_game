@@ -7,7 +7,7 @@ import sys
 sys.path.append("../src")
 sys.path.append("src")
 
-from scrabble import load_distribution_file
+from scrabble import generate_random_input, load_distribution_file
 
 DATA_DIR = "data"
 DICTIONARY = "francais.txt"
@@ -19,5 +19,8 @@ if __name__ == "__main__":
 
     if not letter_set:
         exit(1)
-    else:
-        print(letter_set)
+
+    print(letter_set)
+
+    letters = generate_random_input(letter_set)
+    print(letters)

@@ -1,7 +1,10 @@
 #! /usr/bin/env python3
 
 import os
+from random import shuffle
 import sys
+
+SET_SIZE = 7
 
 def load_distribution_file(file_name):
     '''
@@ -23,3 +26,19 @@ def load_distribution_file(file_name):
             return_letter_set.append((line[0], int(line[1]), int(line[2])))
 
     return return_letter_set
+
+def generate_random_input(letter_set):
+    '''
+    Takes a set/list of letters (letter,number,points) and returns
+    SET_SIZE letters picked from that set.
+    '''
+    pool = []
+
+    # Init pool
+    for lnp in letter_set: # lnp: (letter,number,point)
+        for _ in range(lnp[1]):
+            pool.append(lnp[0])
+
+    shuffle(pool)
+
+    return pool[:SET_SIZE]
