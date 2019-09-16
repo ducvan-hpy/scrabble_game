@@ -30,6 +30,9 @@ def load_distribution_file(file_name):
     return return_letter_set
 
 def load_dictionary_file(file_name):
+    '''
+    Return a list of tuples (word, letters used).
+    '''
     return_word_list = []
     if not os.path.isfile(file_name):
         print("File {} not found".format(file_name), file=sys.stderr)
@@ -39,8 +42,9 @@ def load_dictionary_file(file_name):
 
         for word in word_list:
             if word:
-                return_word_list.append(word)
-
+                return_word_list.append(
+                    (word, "".join(sorted(unidecode.unidecode(word).upper())))
+                )
     return return_word_list
 
 def generate_random_input(letter_set):
