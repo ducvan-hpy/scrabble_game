@@ -15,13 +15,14 @@ DICTIONARY_FILE = "francais.txt"
 DISTRIBUTION_FILE = "french_scrabble_distribution_with_points.csv"
 
 if __name__ == "__main__":
-    letter_set = load_distribution_file("{}/{}".format(DATA_DIR,
-                                                       DISTRIBUTION_FILE))
+    letter_set, letter_points = load_distribution_file("{}/{}".format(
+        DATA_DIR, DISTRIBUTION_FILE))
 
     if not letter_set:
         exit(1)
 
     print(letter_set)
+    print(letter_points)
 
     letters = generate_random_input(letter_set)
     print(letters)
