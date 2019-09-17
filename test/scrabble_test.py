@@ -7,8 +7,9 @@ import sys
 sys.path.append("../src")
 sys.path.append("src")
 
-from scrabble import (generate_random_input, load_dictionary_file,
-                      load_distribution_file)
+from scrabble import (find_best, generate_random_input, load_dictionary_file,
+                      load_distribution_file, sort_all_letters_by_points,
+                      sort_letters_by_points)
 
 DATA_DIR = "data"
 DICTIONARY_FILE = "francais.txt"
@@ -29,3 +30,6 @@ if __name__ == "__main__":
 
     word_list = load_dictionary_file("{}/{}".format(DATA_DIR, DICTIONARY_FILE))
     print(word_list[-10:])
+
+    print(sort_letters_by_points(letter_points, letters))
+    print(sort_all_letters_by_points(letter_points))

@@ -66,3 +66,12 @@ def generate_random_input(letter_set):
     shuffle(pool)
 
     return pool[:SET_SIZE]
+
+def sort_letters_by_points(letter_points, letters):
+    return sorted(letters, key=lambda l: letter_points.get(l, 0))
+
+def sort_all_letters_by_points(letter_points):
+    return sorted(letter_points, key=lambda l: letter_points.get(l, 0))
+
+def find_best(letters):
+     pass
