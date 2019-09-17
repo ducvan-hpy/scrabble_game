@@ -128,5 +128,13 @@ def find_best(letter_points, word_map, letters):
         word_found = find_best_with_blank(letter_points, word_map, letters)
     else:
         word_found = find_words(word_map, letters)
+        if not word_found:
+            sorted_letters = sort_letters_by_points(letter_points, letters)
+            sub_letter = 1
+            while not word_found:
+                for l in sorted_letters:
+                    tmp_letters = list(letters)
+                    tmp_letters.remove(l)
+                    word_found = find_words(word_map, tmp_letters)
 
     return word_found
