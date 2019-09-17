@@ -28,7 +28,7 @@ if __name__ == "__main__":
     letters = generate_random_input(letter_set)
     print(letters)
 
-    word_list = load_dictionary_file("{}/{}".format(DATA_DIR, DICTIONARY_FILE))
+    word_list, word_map = load_dictionary_file("{}/{}".format(DATA_DIR, DICTIONARY_FILE))
     print(word_list[-10:])
 
     print(sort_letters_by_points(letter_points, letters))

@@ -35,9 +35,11 @@ def load_distribution_file(file_name):
 
 def load_dictionary_file(file_name):
     '''
-    Return a list of tuples (word, letters used).
+    Return the list of words and a dict formatted as: letters_used => [words]
     '''
     return_word_list = []
+    word_map = {}
+
     if not os.path.isfile(file_name):
         print("File {} not found".format(file_name), file=sys.stderr)
     else:
@@ -45,11 +47,15 @@ def load_dictionary_file(file_name):
             word_list = dictionary_file.read().split("\n")
 
         for word in word_list:
-            if word:
-                return_word_list.append(
-                    (word, "".join(sorted(unidecode.unidecode(word).upper())))
-                )
-    return return_word_list
+            if word: # Filter out empty strings
+                return_word_list.append(word)
+                letters_used = "".join(sorted(unidecode.unidecode(word).upper()))
+                if not letters_used in word_map:
+                    word_map[letters_used] = [word]
+                else:
+                    word_map[letters_used].append(word)
+
+    return return_word_list, word_map
 
 def generate_random_input(letter_set):
     '''
@@ -73,5 +79,5 @@ def sort_letters_by_points(letter_points, letters):
 def sort_all_letters_by_points(letter_points):
     return sorted(letter_points, key=lambda l: letter_points.get(l, 0))
 
-def find_best(letters):
+def find_best(word_map, letters):
      pass
