@@ -11,9 +11,11 @@ SET_SIZE = 7
 def load_distribution_file(file_name):
     '''
     Loads a csv file containing the letters with their number and points.
-    The file contains a header: letter,number,points.
+    The file contains a header: "letter,number,points" and last line ends
+    with "\n".
+    Returns a dictionary formatted as: {letter: (number, points)}
     '''
-    return_letter_set = []
+    return_letter_set = {}
 
     if not os.path.isfile(file_name):
         print("File {} not found".format(file_name), file=sys.stderr)
@@ -25,7 +27,7 @@ def load_distribution_file(file_name):
         letter_set = letter_set[1:-1]
         for line in letter_set:
             line = line.split(",")
-            return_letter_set.append((line[0], int(line[1]), int(line[2])))
+            return_letter_set[line[0]] = (int(line[1]), int(line[2]))
 
     return return_letter_set
 
@@ -49,15 +51,15 @@ def load_dictionary_file(file_name):
 
 def generate_random_input(letter_set):
     '''
-    Takes a set/list of letters (letter,number,points) and returns
+    Takes a set/dict of letters {letter:(number,points)} and returns
     SET_SIZE letters picked from that set.
     '''
     pool = []
 
     # Init pool
-    for lnp in letter_set: # lnp: (letter,number,point)
-        for _ in range(lnp[1]):
-            pool.append(lnp[0])
+    for l, np in letter_set.items(): # l, np: letter, (number, point)
+        for _ in range(np[1]):
+            pool.append(l)
 
     shuffle(pool)
 
