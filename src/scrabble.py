@@ -7,6 +7,8 @@ import unidecode
 
 
 SET_SIZE = 7
+BLANK_TILE_NAME = "blank"
+MAX_BLANK_TILES = 2
 
 def load_distribution_file(file_name):
     '''
@@ -35,7 +37,8 @@ def load_distribution_file(file_name):
 
 def load_dictionary_file(file_name):
     '''
-    Return the list of words and a dict formatted as: letters_used => [words]
+    Return the list of words and a dict formatted as: letters_used => [words].
+    The returned dictionary is a hash map where
     '''
     return_word_list = []
     word_map = {}
@@ -79,5 +82,51 @@ def sort_letters_by_points(letter_points, letters):
 def sort_all_letters_by_points(letter_points):
     return sorted(letter_points, key=lambda l: letter_points.get(l, 0))
 
-def find_best(word_map, letters):
-     pass
+def find_words(word_map, letters):
+    '''
+    Returns words that can be formed from letters.
+    '''
+    selected_letters = "".join(sorted(letters))
+    print("find_words", letters)
+    return word_map.get(selected_letters)
+
+def find_best_with_blank(letter_points, word_map, letters):
+    all_letters = list(letter_points) # All letters without blank
+    all_letters.remove(BLANK_TILE_NAME)
+
+    word_found = None
+    if letters.count(BLANK_TILE_NAME) == MAX_BLANK_TILES:
+        for l in all_letters:
+            tmp_letters = list(letters)
+            tmp_letters.remove(BLANK_TILE_NAME)
+            tmp_letters.append(l)
+
+            for l in all_letters:
+                tmp_letters_2 = list(tmp_letters)
+                tmp_letters_2.remove(BLANK_TILE_NAME)
+                tmp_letters_2.append(l)
+
+                word_found = find_words(word_map, tmp_letters_2)
+                if word_found:
+                    return word_found
+    else:
+        for l in all_letters:
+            tmp_letters = list(letters)
+            tmp_letters.remove(BLANK_TILE_NAME)
+            tmp_letters.append(l)
+
+            word_found = find_words(word_map, tmp_letters)
+            if word_found:
+                break
+
+    return word_found
+
+
+def find_best(letter_points, word_map, letters):
+    word_found = None
+    if BLANK_TILE_NAME in letters:
+        word_found = find_best_with_blank(letter_points, word_map, letters)
+    else:
+        word_found = find_words(word_map, letters)
+
+    return word_found

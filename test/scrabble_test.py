@@ -22,14 +22,10 @@ if __name__ == "__main__":
     if not letter_set:
         exit(1)
 
-    print(letter_set)
-    print(letter_points)
-
     letters = generate_random_input(letter_set)
     print(letters)
 
     word_list, word_map = load_dictionary_file("{}/{}".format(DATA_DIR, DICTIONARY_FILE))
-    print(word_list[-10:])
 
-    print(sort_letters_by_points(letter_points, letters))
-    print(sort_all_letters_by_points(letter_points))
+    best_words = find_best(letter_points, word_map, letters)
+    print(best_words)
