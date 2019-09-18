@@ -48,6 +48,8 @@ def load_dictionary_file(file_name):
            },
         ...
     }
+    As we will handle words where the length is SET_SIZE letters max,
+    we will not store words where the len(word) > SET_SIZE.
     '''
     return_word_list = []
     word_map = {}
@@ -59,7 +61,8 @@ def load_dictionary_file(file_name):
             word_list = dictionary_file.read().split("\n")
 
         for word in word_list:
-            if word: # Filter out empty strings
+            # Filter out empty strings and long words
+            if word and len(word) <= SET_SIZE:
                 return_word_list.append(word)
                 wword_length = len(word)
                 letters_used = "".join(sorted(unidecode.unidecode(word).upper()))
