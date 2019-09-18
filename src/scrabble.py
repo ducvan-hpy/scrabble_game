@@ -37,8 +37,17 @@ def load_distribution_file(file_name):
 
 def load_dictionary_file(file_name):
     '''
-    Return the list of words and a dict formatted as: letters_used => [words].
-    The returned dictionary is a hash map where
+    Return the list of words and a dictionary formatted like:
+    word_map: {len(word): {letters_used: [words]}}
+    For example:
+    {
+        1: {A: [A]},
+        2: {
+              AB: [AB, BA],
+              BC: [BC, CB],
+           },
+        ...
+    }
     '''
     return_word_list = []
     word_map = {}
@@ -52,11 +61,14 @@ def load_dictionary_file(file_name):
         for word in word_list:
             if word: # Filter out empty strings
                 return_word_list.append(word)
+                wword_length = len(word)
                 letters_used = "".join(sorted(unidecode.unidecode(word).upper()))
-                if not letters_used in word_map:
-                    word_map[letters_used] = [word]
+                if not wword_length in word_map:
+                    word_map[wword_length] = {}
+                if not letters_used in word_map[wword_length]:
+                    word_map[wword_length][letters_used] = [word]
                 else:
-                    word_map[letters_used].append(word)
+                    word_map[wword_length][letters_used].append(word)
 
     return return_word_list, word_map
 
@@ -86,9 +98,10 @@ def find_words(word_map, letters):
     '''
     Returns words that can be formed from letters.
     '''
+    wword_length = len(letters)
     selected_letters = "".join(sorted(letters))
     print("find_words", letters)
-    return word_map.get(selected_letters)
+    return word_map[wword_length].get(selected_letters)
 
 def find_best_with_blank(letter_points, word_map, letters):
     all_letters = list(letter_points) # All letters without blank
