@@ -112,6 +112,8 @@ def find_best_with_blank(letter_points, word_map, letters):
     all_letters.remove(BLANK_TILE_NAME)
 
     word_found = None
+
+    # Handle case with 2 blank tiles
     if letters.count(BLANK_TILE_NAME) == MAX_BLANK_TILES:
         for l in all_letters:
             tmp_letters = list(letters)
@@ -175,7 +177,7 @@ def find_best(letter_points, word_map, letters):
     else:
         word_found = find_words(word_map, letters)
 
-        if not word_found:
-            word_found = find_best_subsets(letter_points, word_map, letters)
+    if not word_found:
+        word_found = find_best_subsets(letter_points, word_map, letters)
 
     return word_found
