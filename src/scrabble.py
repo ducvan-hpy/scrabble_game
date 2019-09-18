@@ -151,6 +151,22 @@ def get_subsets(letter_points, letters):
 
     return subsets
 
+def find_best_subsets(letter_points, word_map, letters):
+    subsets1 = get_subsets(letter_points, letters)
+    subsets2 = []
+
+    word_found = None
+    while not word_found and subsets1:
+        for tmp_letters in subsets1:
+            word_found = find_words(word_map, tmp_letters)
+            if word_found:
+                return word_found
+            subsets2 += get_subsets(letter_points, tmp_letters)
+
+        subsets1 = subsets2
+        subsets2 = []
+
+    return None
 
 def find_best(letter_points, word_map, letters):
     word_found = None
@@ -160,18 +176,6 @@ def find_best(letter_points, word_map, letters):
         word_found = find_words(word_map, letters)
 
         if not word_found:
-            subsets1 = get_subsets(letter_points, letters)
-            subsets2 = []
-
-            while not word_found:
-                for tmp_letters in subsets1:
-                    word_found = find_words(word_map, tmp_letters)
-                    if word_found:
-                        return word_found
-                    subsets2 += get_subsets(letter_points, tmp_letters)
-
-                subsets1 = subsets2
-                subsets2 = []
-
+            word_found = find_best_subsets(letter_points, word_map, letters)
 
     return word_found
