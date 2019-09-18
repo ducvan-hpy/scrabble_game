@@ -181,3 +181,10 @@ def find_best(letter_points, word_map, letters):
         word_found = find_best_subsets(letter_points, word_map, letters)
 
     return word_found
+
+def count_points(letter_points, word):
+    score = 0
+    letters = unidecode.unidecode(word).upper()
+    for l in letters:
+        score += letter_points[l]
+    return score

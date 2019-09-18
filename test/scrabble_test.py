@@ -7,9 +7,9 @@ import sys
 sys.path.append("../src")
 sys.path.append("src")
 
-from scrabble import (find_best, generate_random_input, load_dictionary_file,
-                      load_distribution_file, sort_all_letters_by_points,
-                      sort_letters_by_points)
+from scrabble import (count_points, find_best, generate_random_input,
+                      load_dictionary_file, load_distribution_file,
+                      sort_all_letters_by_points, sort_letters_by_points)
 
 DATA_DIR = "data"
 DICTIONARY_FILE = "francais.txt"
@@ -29,3 +29,5 @@ if __name__ == "__main__":
 
     best_words = find_best(letter_points, word_map, letters)
     print(best_words)
+    if best_words:
+        print("Points:", count_points(letter_points, best_words[0]))
