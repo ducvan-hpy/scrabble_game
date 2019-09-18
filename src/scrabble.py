@@ -107,7 +107,8 @@ def find_words(word_map, letters):
     return word_map[wword_length].get(selected_letters)
 
 def find_best_with_blank(letter_points, word_map, letters):
-    all_letters = list(letter_points) # All letters without blank
+    # All letters without blank
+    all_letters = list(letter_points)
     all_letters.remove(BLANK_TILE_NAME)
 
     word_found = None
@@ -137,6 +138,19 @@ def find_best_with_blank(letter_points, word_map, letters):
 
     return word_found
 
+def get_subsets(letter_points, letters):
+    subsets = []
+
+    # Sort by points, remove letters with lowest points first
+    sorted_letters = sort_letters_by_points(letter_points, letters)
+
+    for l in sorted_letters:
+        tmp_letters = list(letters)
+        tmp_letters.remove(l)
+        subsets.append(tmp_letters)
+
+    return subsets
+
 
 def find_best(letter_points, word_map, letters):
     word_found = None
@@ -144,13 +158,20 @@ def find_best(letter_points, word_map, letters):
         word_found = find_best_with_blank(letter_points, word_map, letters)
     else:
         word_found = find_words(word_map, letters)
+
         if not word_found:
-            sorted_letters = sort_letters_by_points(letter_points, letters)
-            sub_letter = 1
+            subsets1 = get_subsets(letter_points, letters)
+            subsets2 = []
+
             while not word_found:
-                for l in sorted_letters:
-                    tmp_letters = list(letters)
-                    tmp_letters.remove(l)
+                for tmp_letters in subsets1:
                     word_found = find_words(word_map, tmp_letters)
+                    if word_found:
+                        return word_found
+                    subsets2 += get_subsets(letter_points, tmp_letters)
+
+                subsets1 = subsets2
+                subsets2 = []
+
 
     return word_found
