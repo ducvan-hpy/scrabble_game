@@ -101,7 +101,6 @@ def find_words(word_map, letters):
     '''
     wword_length = len(letters)
     selected_letters = "".join(sorted(letters))
-    print("find_words", letters)
     return word_map[wword_length].get(selected_letters)
 
 def find_best_with_blank(letter_points, word_map, letters):

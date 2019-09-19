@@ -21,13 +21,13 @@ if __name__ == "__main__":
         exit(1)
 
     letters = scrabble_lib.generate_random_input(letter_set)
-    print(letters)
+    print("Letters:", letters)
 
     word_map = scrabble_lib.load_dictionary_file("{}/{}".format(
         DATA_DIR, DICTIONARY_FILE))
 
     best_words = scrabble_lib.find_best(letter_points, word_map, letters)
-    print(best_words)
+    print("Best words:", best_words)
     if best_words:
         print("Points:", scrabble_lib.count_points(letter_points,
                                                    best_words[0]))
