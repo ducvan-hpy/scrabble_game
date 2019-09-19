@@ -73,10 +73,10 @@ def load_dictionary_file(file_name):
 
     return word_map
 
-def generate_random_input(letter_set):
+def generate_random_input(letter_set, nletters=SET_SIZE):
     '''
     Takes a set/dict of letters {letter:(number,points)} and returns
-    SET_SIZE letters picked from that set.
+    nletters letters (SET_SIZE by default) picked from that set.
     '''
     pool = []
 
@@ -87,7 +87,7 @@ def generate_random_input(letter_set):
 
     shuffle(pool)
 
-    return pool[:SET_SIZE]
+    return pool[:nletters]
 
 def sort_letters_by_points(letter_points, letters):
     return sorted(letters, key=lambda l: letter_points.get(l, 0))
