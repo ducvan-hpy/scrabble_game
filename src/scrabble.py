@@ -51,7 +51,6 @@ def load_dictionary_file(file_name):
     As we will handle words where the length is SET_SIZE letters max,
     we will not store words where the len(word) > SET_SIZE.
     '''
-    return_word_list = []
     word_map = {}
 
     if not os.path.isfile(file_name):
@@ -63,7 +62,6 @@ def load_dictionary_file(file_name):
         for word in word_list:
             # Filter out empty strings and long words
             if word and len(word) <= SET_SIZE:
-                return_word_list.append(word)
                 wword_length = len(word)
                 letters_used = "".join(sorted(unidecode.unidecode(word).upper()))
                 if not wword_length in word_map:
@@ -73,7 +71,7 @@ def load_dictionary_file(file_name):
                 else:
                     word_map[wword_length][letters_used].append(word)
 
-    return return_word_list, word_map
+    return word_map
 
 def generate_random_input(letter_set):
     '''

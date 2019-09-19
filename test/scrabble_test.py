@@ -25,7 +25,7 @@ if __name__ == "__main__":
     letters = generate_random_input(letter_set)
     print(letters)
 
-    word_list, word_map = load_dictionary_file("{}/{}".format(DATA_DIR, DICTIONARY_FILE))
+    word_map = load_dictionary_file("{}/{}".format(DATA_DIR, DICTIONARY_FILE))
 
     best_words = find_best(letter_points, word_map, letters)
     print(best_words)
