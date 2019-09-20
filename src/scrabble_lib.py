@@ -161,7 +161,12 @@ def find_best_subsets(letter_points, word_map, letters):
     word_found = None
     while not word_found and subsets1:
         for tmp_letters in subsets1:
-            word_found = find_words(word_map, tmp_letters)
+            if BLANK_TILE_NAME in tmp_letters:
+                word_found = find_best_with_blank(letter_points, word_map,
+                                                  tmp_letters)
+            else:
+                word_found = find_words(word_map, tmp_letters)
+
             if word_found:
                 return word_found
             subsets2 += get_subsets(letter_points, tmp_letters)
