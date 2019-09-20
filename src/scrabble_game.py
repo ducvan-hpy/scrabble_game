@@ -210,14 +210,28 @@ class Game:
 
         log_action(self.logfile, "===")
 
+        winner_name = ""
+        winner_points = 0
         for _ in range(N_PLAYERS):
             player = self.current_player()
+            player_name = player.get_name()
+            player_points = player.get_points()
             log_action(self.logfile, "Player {} hand: {}"
-                       .format(player.get_name(), player.get_letters()))
+                       .format(player_name, player.get_letters()))
 
             log_action(self.logfile, "Player {} got {} points"
-                       .format(player.get_name(), player.get_points()))
+                       .format(player_name, player_points))
+
+            if player_points > winner_points:
+                winner_name = player_name
+                winner_points = player_points
+            elif player_points == winner_points:
+                winner_name += " and " + player_name
+
             self.next_player()
+
+        log_action(self.logfile, "===\nPlayer {} won the game with {} points"
+                   .format(winner_name, winner_points))
 
     def play(self):
         self.setup_game()
