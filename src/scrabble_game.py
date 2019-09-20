@@ -142,11 +142,11 @@ class Game:
             log_action("--\nPlayer {} hand: {}".format(player.get_name(),
                                                        player.get_letters()))
 
-            best_words = scrabble_lib.find_best(self.letter_points,
-                                                self.word_map,
-                                                player.get_letters())
+            # Because of blank tiles, we will recompute the points
+            best_word, _ = scrabble_lib.find_best(self.letter_points,
+                                                  self.word_map,
+                                                  player.get_letters())
 
-            best_word = unidecode.unidecode(best_words[0]).upper()
             removed_letters = player.remove_letters(best_word)
             points = scrabble_lib.count_points(self.letter_points,
                                                "".join(removed_letters))

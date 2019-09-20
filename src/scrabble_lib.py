@@ -159,7 +159,8 @@ def find_best_subsets(letter_points, word_map, letters):
     subsets2 = []
 
     word_found = None
-    while not word_found and subsets1:
+    words_found = []
+    while subsets1:
         for tmp_letters in subsets1:
             if BLANK_TILE_NAME in tmp_letters:
                 word_found = find_best_with_blank(letter_points, word_map,
@@ -168,25 +169,13 @@ def find_best_subsets(letter_points, word_map, letters):
                 word_found = find_words(word_map, tmp_letters)
 
             if word_found:
-                return word_found
+                words_found += word_found
             subsets2 += get_subsets(letter_points, tmp_letters)
 
         subsets1 = subsets2
         subsets2 = []
 
-    return None
-
-def find_best(letter_points, word_map, letters):
-    word_found = None
-    if BLANK_TILE_NAME in letters:
-        word_found = find_best_with_blank(letter_points, word_map, letters)
-    else:
-        word_found = find_words(word_map, letters)
-
-    if not word_found:
-        word_found = find_best_subsets(letter_points, word_map, letters)
-
-    return word_found
+    return words_found
 
 def count_points(letter_points, word):
     score = 0
@@ -194,3 +183,30 @@ def count_points(letter_points, word):
     for l in letters:
         score += letter_points[l]
     return score
+
+def max_points_word(letter_points, words):
+    if not words:
+        return None, 0
+
+    word_points = {}
+    for word in words:
+        word_key = unidecode.unidecode(word).upper()
+        if not word_key in word_points:
+            word_points[word_key] = count_points(letter_points, word)
+
+    best_word = max(word_points, key=word_points.get)
+    return best_word, word_points.get(best_word)
+
+def find_best(letter_points, word_map, letters):
+    word_found = []
+    # Try to use all letters first
+    if BLANK_TILE_NAME in letters:
+        words_found = find_best_with_blank(letter_points, word_map, letters)
+    else:
+        words_found = find_words(word_map, letters)
+
+    # Try to find words using a subset of letters
+    if not words_found:
+        words_found = find_best_subsets(letter_points, word_map, letters)
+
+    return max_points_word(letter_points, words_found)

@@ -26,8 +26,6 @@ if __name__ == "__main__":
     word_map = scrabble_lib.load_dictionary_file("{}/{}".format(
         DATA_DIR, DICTIONARY_FILE))
 
-    best_words = scrabble_lib.find_best(letter_points, word_map, letters)
-    print("Best words:", best_words)
-    if best_words:
-        print("Points:", scrabble_lib.count_points(letter_points,
-                                                   best_words[0]))
+    best_word, points = scrabble_lib.find_best(letter_points, word_map, letters)
+    print("Best word:", best_word)
+    print("Points:", points)
