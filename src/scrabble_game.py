@@ -67,6 +67,18 @@ class Game:
             self.letter_set[l] -= 1
             self.n_tiles -= 1
 
+    def current_player_pick_1_letter(self, letter_set):
+        player = self.current_player()
+        l = None
+
+        while not l or l == scrabble_lib.BLANK_TILE_NAME:
+            l = scrabble_lib.generate_random_input(letter_set, 1)[0]
+            letter_set[l] -= 1
+            log_action("Player {} has picked a '{}' tile".
+                       format(player.get_name(), l))
+
+        return l
+
     def current_player_pick_letters(self):
         player = self.current_player()
         n_letters = scrabble_lib.SET_SIZE - player.get_number_letters()
@@ -75,13 +87,29 @@ class Game:
         player.add_letters(letters)
         log_action("Player {} has picked {}".format(player.get_name(), letters))
 
-    def start_game(self):
+    def setup_game(self):
+        # Each player draw 1 tile, the closest to A start the game
+        players_start_tile = []
+        letter_set = dict(self.letter_set)
+
+        for _ in range(N_PLAYERS):
+            l = self.current_player_pick_1_letter(letter_set)
+            players_start_tile.append(l)
+            self.next_player()
+
+        min_tile = min(players_start_tile)
+        self.player_turn = players_start_tile.index(min_tile)
+
+        player = self.current_player()
+        log_action("Player {} has the tile closest to 'A', he will be the "
+                   "first player to play".format(player.get_name()))
+
         for _ in range(N_PLAYERS):
             self.current_player_pick_letters()
             self.next_player()
 
     def play(self):
-        self.start_game()
+        self.setup_game()
 
 
 def log_action(message):
