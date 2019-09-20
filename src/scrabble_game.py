@@ -125,6 +125,10 @@ class Game:
             self.next_player()
 
     def current_player_play(self):
+        '''
+        Play 1 turn with current player.
+        Return True if he can play, False otherwise.
+        '''
         player = self.current_player()
         log_action("--\nPlayer {} hand: {}".format(player.get_name(),
                                                    player.get_letters()))
@@ -151,13 +155,19 @@ class Game:
 
             if not self.is_over():
                 self.current_player_pick_letters()
+            return True
         else:
             log_action("Player {} cannot play".format(player.get_name()))
+            return False
 
     def end_game(self):
-        for _ in range(N_PLAYERS):
-            self.current_player_play()
-            self.next_player()
+        can_play = True
+        while can_play:
+            can_play = False
+            for _ in range(N_PLAYERS):
+                if self.current_player_play():
+                    can_play = True
+                self.next_player()
 
         log_action("===")
 
@@ -177,7 +187,8 @@ class Game:
             self.current_player_play()
             self.next_player()
 
-        log_action("===\n{} tiles remaining\n===".format(self.n_tiles))
+        log_action("===\n{} tiles remaining. Finishing the game with tiles "
+                   "in players hands.".format(self.n_tiles))
 
         self.end_game()
 
