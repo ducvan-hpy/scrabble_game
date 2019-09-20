@@ -124,29 +124,16 @@ class Game:
             self.current_player_pick_letters()
             self.next_player()
 
-    def end_game(self):
-        for _ in range(N_PLAYERS):
-            player = self.current_player()
-            log_action("Player {} hand: {}".format(player.get_name(),
+    def current_player_play(self):
+        player = self.current_player()
+        log_action("--\nPlayer {} hand: {}".format(player.get_name(),
                                                    player.get_letters()))
 
-            log_action("Player {} got {} points".format(player.get_name(),
-                                                        player.get_points()))
-            self.next_player()
+        # Because of blank tiles, we will recompute the points
+        best_word, _ = scrabble_lib.find_best(self.letter_points, self.word_map,
+                                              player.get_letters())
 
-    def play(self):
-        self.setup_game()
-
-        while not self.is_over():
-            player = self.current_player()
-            log_action("--\nPlayer {} hand: {}".format(player.get_name(),
-                                                       player.get_letters()))
-
-            # Because of blank tiles, we will recompute the points
-            best_word, _ = scrabble_lib.find_best(self.letter_points,
-                                                  self.word_map,
-                                                  player.get_letters())
-
+        if best_word:
             removed_letters = player.remove_letters(best_word)
             points = scrabble_lib.count_points(self.letter_points,
                                                "".join(removed_letters))
@@ -162,7 +149,32 @@ class Game:
                            .format(player.get_name(), len(best_word),
                                    SCRABBLE_POINTS))
 
-            self.current_player_pick_letters()
+            if not self.is_over():
+                self.current_player_pick_letters()
+        else:
+            log_action("Player {} cannot play".format(player.get_name()))
+
+    def end_game(self):
+        for _ in range(N_PLAYERS):
+            self.current_player_play()
+            self.next_player()
+
+        log_action("===")
+
+        for _ in range(N_PLAYERS):
+            player = self.current_player()
+            log_action("Player {} hand: {}".format(player.get_name(),
+                                                   player.get_letters()))
+
+            log_action("Player {} got {} points".format(player.get_name(),
+                                                        player.get_points()))
+            self.next_player()
+
+    def play(self):
+        self.setup_game()
+
+        while not self.is_over():
+            self.current_player_play()
             self.next_player()
 
         log_action("===\n{} tiles remaining\n===".format(self.n_tiles))
