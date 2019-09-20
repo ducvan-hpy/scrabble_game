@@ -78,6 +78,11 @@ class Game:
         '''
         return self.n_tiles <= 0
 
+    def add_letters_to_set(self, letters):
+        for l in letters:
+            self.letter_set[l] += 1
+            self.n_tiles += 1
+
     def remove_letters_from_set(self, removed_letters):
         for l in removed_letters:
             self.letter_set[l] -= 1
@@ -102,6 +107,27 @@ class Game:
         self.remove_letters_from_set(letters)
         player.add_letters(letters)
         log_action("Player {} has picked {}".format(player.get_name(), letters))
+
+
+    def current_player_substitute_letters(self):
+        '''
+        If a player cannot play, he can substitute some letters from his hand
+        to the tiles bag.
+        We will simplify this case and swap all the letters in his hand.
+        '''
+        player = self.current_player()
+        letters = scrabble_lib.generate_random_input(self.letter_set,
+                                                     scrabble_lib.SET_SIZE)
+        old_letters = player.get_letters()
+
+        log_action("Player {} has swapped {} for {}".format(
+            player.get_name(), old_letters, letters))
+
+        self.remove_letters_from_set(letters)
+        self.add_letters_to_set(old_letters)
+
+        player.add_letters(letters)
+        player.remove_letters(old_letters)
 
     def setup_game(self):
         # Each player draw 1 tile, the closest to A start the game
@@ -184,7 +210,11 @@ class Game:
         self.setup_game()
 
         while not self.is_over():
-            self.current_player_play()
+            if not self.current_player_play() and \
+               self.n_tiles >= scrabble_lib.SET_SIZE:
+                # If current player can not play and there is enough tiles
+                #  to draw a new hand
+                self.current_player_substitute_letters()
             self.next_player()
 
         log_action("===\n{} tiles remaining. Finishing the game with tiles "
