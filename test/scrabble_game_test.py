@@ -10,7 +10,7 @@ sys.path.append("src")
 import os.path
 import scrabble_game
 
-DATA_DIR = "data"
+DATA_DIR = "../data"
 DICTIONARY_FILE = "francais.txt"
 DISTRIBUTION_FILE = "french_scrabble_distribution_with_points.csv"
 
