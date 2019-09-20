@@ -7,6 +7,7 @@ import sys
 sys.path.append("../src")
 sys.path.append("src")
 
+import os.path
 import scrabble_game
 
 DATA_DIR = "data"
@@ -16,6 +17,16 @@ DISTRIBUTION_FILE = "french_scrabble_distribution_with_points.csv"
 if __name__ == "__main__":
     dictionary_file = "{}/{}".format(DATA_DIR, DICTIONARY_FILE)
     distribution_file = "{}/{}".format(DATA_DIR, DISTRIBUTION_FILE)
+
+    while not os.path.exists(dictionary_file) or \
+       not os.path.exists(distribution_file):
+        print("Cannot load {} or {}".format(dictionary_file, distribution_file),
+              file=sys.stderr)
+
+        data_dir = input("Please specify data dir\n> ")
+
+        dictionary_file = "{}/{}".format(data_dir, DICTIONARY_FILE)
+        distribution_file = "{}/{}".format(data_dir, DISTRIBUTION_FILE)
 
     game = scrabble_game.Game(dictionary_file, distribution_file)
 

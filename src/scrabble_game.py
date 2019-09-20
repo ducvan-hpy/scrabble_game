@@ -236,6 +236,9 @@ class Game:
 
         self.end_game()
 
+        if not warning_permission:
+            print("Game over. Game logs saved in {}".format(self.logfile))
+
 warning_permission = False
 def log_action(filename, message):
     global warning_permission
