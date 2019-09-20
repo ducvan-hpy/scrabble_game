@@ -2,6 +2,7 @@
 
 from datetime import datetime
 import scrabble_lib
+import sys
 import time
 import unidecode
 
@@ -235,6 +236,16 @@ class Game:
 
         self.end_game()
 
+warning_permission = False
 def log_action(filename, message):
-    with open(filename, "a") as f:
-        f.write(message + "\n")
+    global warning_permission
+    try:
+        with open(filename, "a") as f:
+            f.write(message + "\n")
+    except PermissionError:
+        # If no permission to create log file, print on stdout
+        if not warning_permission:
+            print("No permission to write in {}, print log on stdout"
+                  .format(filename), file=sys.stderr)
+            warning_permission = True
+        print(message)
