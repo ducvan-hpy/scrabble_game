@@ -7,6 +7,8 @@ import unidecode
 
 
 N_PLAYERS = 2
+# Point to add to your total if play all your tiles
+SCRABBLE_POINTS = 50
 
 
 class Player:
@@ -137,8 +139,8 @@ class Game:
 
         while not self.is_over():
             player = self.current_player()
-            log_action("Player {} hand: {}".format(player.get_name(),
-                                                   player.get_letters()))
+            log_action("--\nPlayer {} hand: {}".format(player.get_name(),
+                                                       player.get_letters()))
 
             best_words = scrabble_lib.find_best(self.letter_points,
                                                 self.word_map,
@@ -153,6 +155,13 @@ class Game:
 
             log_action("Player {} played '{}' for {} points"
                        .format(player.get_name(), best_word, points))
+
+            if len(best_word) == scrabble_lib.SET_SIZE:
+                player.add_points(SCRABBLE_POINTS)
+                log_action("Player {} played {} tiles and got {} extra points"
+                           .format(player.get_name(), len(best_word),
+                                   SCRABBLE_POINTS))
+
             self.current_player_pick_letters()
             self.next_player()
 
