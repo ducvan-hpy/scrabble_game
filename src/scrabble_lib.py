@@ -8,6 +8,7 @@ import unidecode
 
 SET_SIZE = 7
 BLANK_TILE_NAME = "blank"
+MIN_WORD_SIZE = 2
 MAX_BLANK_TILES = 2
 
 def load_distribution_file(file_name):
@@ -60,16 +61,17 @@ def load_dictionary_file(file_name):
             word_list = dictionary_file.read().split("\n")
 
         for word in word_list:
-            # Filter out empty strings and long words
-            if word and len(word) <= SET_SIZE:
-                wword_length = len(word)
-                letters_used = "".join(sorted(unidecode.unidecode(word).upper()))
-                if not wword_length in word_map:
-                    word_map[wword_length] = {}
-                if not letters_used in word_map[wword_length]:
-                    word_map[wword_length][letters_used] = [word]
+            # Filter out empty strings and short words and long words
+            l_word = len(word)
+            if word and l_word >= MIN_WORD_SIZE and l_word <= SET_SIZE:
+                letters_used = "".join(sorted(unidecode.unidecode(word).
+                                              upper()))
+                if not l_word in word_map:
+                    word_map[l_word] = {}
+                if not letters_used in word_map[l_word]:
+                    word_map[l_word][letters_used] = [word]
                 else:
-                    word_map[wword_length][letters_used].append(word)
+                    word_map[l_word][letters_used].append(word)
 
     return word_map
 
@@ -99,9 +101,11 @@ def find_words(word_map, letters):
     '''
     Returns words that can be formed from letters.
     '''
-    wword_length = len(letters)
+    word_length = len(letters)
     selected_letters = "".join(sorted(letters))
-    return word_map[wword_length].get(selected_letters)
+    if word_length < MIN_WORD_SIZE:
+        return None
+    return word_map[word_length].get(selected_letters)
 
 def find_best_with_blank(letter_points, word_map, letters):
     # All letters without blank
